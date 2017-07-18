@@ -5,13 +5,16 @@ exports.makeSchema = function(req, res) {
 
     res.setHeader('Content-Type', 'application/json');
 
-    let isExist = (schemaJson, key) => {
+    var isExist = (schemaJson, key) => {
         let result = false;
 
         let schemaKeys = Object.keys(schemaJson);
 
         for(let i in schemaKeys){
-            
+            if(key != schemaKeys[i] && schemaKeys[i].indexOf(key) > -1){
+                result = true;
+                break;
+            }
         }
 
         return result;
@@ -22,8 +25,9 @@ exports.makeSchema = function(req, res) {
         let keys = {};
 
         for (let key in eventJson) {
-            if(isExist(schemaJson, key) || Object.keys(schemaJson).length == 0)
+            if(!isExist(schemaJson, key))
                 keys[key] = new Date().getTime();
+
             if (typeof eventJson[key] === "object" && eventJson[key] !== null) {
                 let subKeys = getSchema(eventJson[key], schemaJson);
                 Object.keys(subKeys).map((subKey) => {
