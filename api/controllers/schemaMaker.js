@@ -1,53 +1,41 @@
 'use strict';
 exports.makeSchema = function(req, res) {
 
-    const streamArray = require('stream-json/utils/StreamArray'),
-          {Writable} = require('stream'),
-          path = require('path'),
-          fileSystem = require('fs'),
-          executionTime = process.hrtime(),
-          dividerStr = '---------------------------------------------------------------';
+    const executionTime = process.hrtime();
 
     res.setHeader('Content-Type', 'application/json');
 
-    let jsonStream = streamArray.make(),
-        fileStream = fileSystem.createReadStream(path.join(__dirname, '../../spicy_data_sample.json')),
-        schema = {};
+    let isExist = (schemaJson, key) => {
+        let result = false;
 
-    var getSchema = (object, counter) => {
+        let schemaKeys = Object.keys(schemaJson);
 
-        let $counter = 0 || counter;
+        for(let i in schemaKeys){
+            
+        }
 
-        for (let key in object)
-        {
-            $counter = $counter + 1;
+        return result;
+    }
 
-            if (typeof object[key] === "object" && object[key] !== null) {
-                getSchema(object[key], $counter);
-            }else{
-                res.write(key+'\r\n');
-                res.write('\r\n');
+    var getSchema = (eventJson, schemaJson) => {
+
+        let keys = {};
+
+        for (let key in eventJson) {
+            if(isExist(schemaJson, key) || Object.keys(schemaJson).length == 0)
+                keys[key] = new Date().getTime();
+            if (typeof eventJson[key] === "object" && eventJson[key] !== null) {
+                let subKeys = getSchema(eventJson[key], schemaJson);
+                Object.keys(subKeys).map((subKey) => {
+                    subKeys[key + "." + subKey] = subKeys[subKey];
+                    delete subKeys[subKey];
+                });
+                Object.assign(keys, subKeys);
             }
         }
 
+        return keys;
     }
 
-    let processingStream = new Writable({
-        write(object, encoding, callback) {
-            setTimeout(() => {
-                getSchema(object);
-                callback()
-            }, 1000);
-        },
-        objectMode: true
-    });
-
-    fileStream.pipe(jsonStream.input);
-    jsonStream.output.pipe(processingStream);
-
-    processingStream.on('finish', () => {
-        res.write('\r\n'+dividerStr+'\r\n'+process.hrtime(executionTime)+' sec');
-        res.end();
-    });
-
+    res.json(getSchema(req.body.eventJson, req.body.schemaJson));
 };
