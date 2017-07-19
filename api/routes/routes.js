@@ -1,8 +1,7 @@
 'use strict';
 module.exports = function(app) {
-    let schemaMaker = require('../controllers/schemaMaker.js');
+    let schemaMaker = require('../controllers/makeSchema.js');
 
     app.route('/makeSchema')
-        .get(schemaMaker.makeSchema)
         .post(schemaMaker.makeSchema);
 };
