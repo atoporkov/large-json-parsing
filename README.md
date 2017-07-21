@@ -4,14 +4,7 @@
 
 1) 'npm install'  *installing all node modules*
 
-2) 'npm start -- --port=`PORT_NUM`'  *starting node server (nodemon) on port = `PORT_NUM` (1331 by default)*
+2) 'npm run-script start_api -- --port=`PORT_NUM`'  *starting http api server (nodemon) on port = `PORT_NUM` (1331 by default)*
 
-
-## FYI
-````
-npm -v
-4.1.1
-
-node -v
-4.4.7
-````
+3) 'npm run-script start_client -- --p=`PORT_NUM`' *starting http server on port = `PORT_NUM` (8080 by default)*,
+        required to launch client side app

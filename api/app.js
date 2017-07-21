@@ -3,7 +3,7 @@ const   express    = require('express'),
         bodyParser = require('body-parser'),
         app        = express(),
         port       = function(){ return (argv.port !== undefined) ? argv.port : 1331;}(),
-        routes     = require('./api/routes/routes');
+        routes     = require('./routes/routes');
 
 app.use(bodyParser.urlencoded({
     extended: true
