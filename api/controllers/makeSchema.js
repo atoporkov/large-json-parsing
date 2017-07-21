@@ -29,11 +29,7 @@ exports.makeSchema = function(req, res) {
                     keys[key] = new Date().getTime();
                 }
             }
-
-            //if(!(eventJson instanceof Array)) {
-            //    keys[key] = new Date().getTime();
-            //}
-
+            
             if (typeof eventJson[key] === "object" && eventJson[key] !== null) {
                 let subKeys = setNewSchema(eventJson[key], _schemaJson);
 
